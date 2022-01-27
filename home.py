@@ -67,7 +67,7 @@ class Books(QMainWindow, books.Ui_MainWindow):
             call_num = self.call_number.text()
             edition = self.edition.text()
             copies = self.copies.text()
-            conn.execute(sqlalchemy.text("INSERT INTO books Values(:x, :y, :z, :a, :b, :c, :d, :e, :f, :g, :h, :i)"), [({"x": acc, "y": author_1, 'z': author_2, "a": title, "b": class_num, "c": pub, "d": subject, "e": isbn, "f": call_num, "g": yop, "h": edition, "i": copies})])
+            conn.execute(sqlalchemy.text("INSERT INTO books Values(:x, :a, :y, :z, :c, :e, :g, :f, :b, :d, :h, :i)"), [({"x": acc, "y": author_1, 'z': author_2, "a": title, "b": class_num, "c": pub, "d": subject, "e": isbn, "f": call_num, "g": yop, "h": edition, "i": copies})])
             print("Data Added.")
         except Exception as e:
             print(e)
