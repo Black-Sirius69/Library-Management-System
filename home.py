@@ -1,16 +1,14 @@
-from PyQt6.QtWidgets import QLineEdit, QApplication, QMainWindow, QMessageBox
-from PyQt6.uic.load_ui import loadUiType
-import mysql.connector as mc
+from PySide6.QtWidgets import QLineEdit, QApplication, QMainWindow, QMessageBox
+import login
+import books
+import main_win
+import sqlalchemy
 import sys
 
-login, _ = loadUiType('./Login.ui')
-main, _ = loadUiType("./main.ui")
-book, _ = loadUiType('./books.ui')
+engine = sqlalchemy.create_engine("mysql://vedant:vedant@localhost/library_management")
+conn = engine.connect()
 
-con = mc.connect(host='localhost', user='vedant', passwd='vedant', database='library_management')
-cur = con.cursor()
-
-class Login(QMainWindow,login):
+class Login(QMainWindow, login.Ui_MainWindow):
     def __init__(self) -> None:
         super().__init__()
         self.setupUi(self)
@@ -28,7 +26,7 @@ class Login(QMainWindow,login):
             error.setIcon(QMessageBox.Icon.Information)
             error.show()
 
-class MainWindow(QMainWindow, main):
+class MainWindow(QMainWindow, main_win.Ui_MainWindow):
     def __init__(self) -> None:
         super().__init__()
         self.setupUi(self)
@@ -48,7 +46,7 @@ class MainWindow(QMainWindow, main):
         self.close()
         self.book.show()
 
-class Books(QMainWindow, book):
+class Books(QMainWindow, books.Ui_MainWindow):
     def __init__(self) -> None:
         super().__init__()
         self.setupUi(self)
@@ -69,8 +67,7 @@ class Books(QMainWindow, book):
             call_num = self.call_number.text()
             edition = self.edition.text()
             copies = self.copies.text()
-            cur.execute(f"INSERT INTO BOOKS VALUES({acc}, {author_1}, {author_2}, {title}, {class_num}, {pub}, {subject}, {isbn}, {call_num}, {yop}, {edition}, {copies})")
-            con.commit()
+            conn.execute(sqlalchemy.text("INSERT INTO books Values(:x, :y, :z, :a, :b, :c, :d, :e, :f, :g, :h, :i)"), [({"x": acc, "y": author_1, 'z': author_2, "a": title, "b": class_num, "c": pub, "d": subject, "e": isbn, "f": call_num, "g": yop, "h": edition, "i": copies})])
             print("Data Added.")
         except Exception as e:
             print(e)
