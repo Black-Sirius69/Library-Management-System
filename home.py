@@ -72,9 +72,11 @@ class Books(QMainWindow, books.Ui_MainWindow):
             success.about(self, "SUCCESSFUL", "Data Added")
             success.setIcon(QMessageBox.Icon.Information)
             success.show()
-        except Exception as e:
-            print(e)
-            print("Could not add data")
+        except Exception:
+            error = QMessageBox()
+            error.about(self, "Error", "Could not add data")
+            error.setIcon(QMessageBox.Icon.Critical)
+            error.show()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

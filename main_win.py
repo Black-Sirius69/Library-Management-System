@@ -15,25 +15,39 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QComboBox, QFrame, QLabel,
-    QLineEdit, QMainWindow, QPushButton, QSizePolicy,
-    QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QFrame, QLabel, QLineEdit,
+    QMainWindow, QPushButton, QSizePolicy, QVBoxLayout,
+    QWidget)
 import library_management_rc
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1047, 690)
+        MainWindow.resize(1024, 683)
+        MainWindow.setMaximumSize(QSize(1024, 683))
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
-        self.verticalLayout = QVBoxLayout(self.centralwidget)
-        self.verticalLayout.setObjectName(u"verticalLayout")
+        self.centralwidget.setMaximumSize(QSize(1024, 683))
+        self.vboxLayout = QVBoxLayout(self.centralwidget)
+        self.vboxLayout.setObjectName(u"vboxLayout")
         self.frame_2 = QFrame(self.centralwidget)
         self.frame_2.setObjectName(u"frame_2")
-        self.frame_2.setStyleSheet(u"background: url(:/images/back.jpeg);")
-        self.frame_2.setFrameShape(QFrame.StyledPanel)
-        self.frame_2.setFrameShadow(QFrame.Raised)
+        palette = QPalette()
+        brush = QBrush(QColor(255, 255, 255, 255))
+        brush.setStyle(Qt.SolidPattern)
+        palette.setBrush(QPalette.Active, QPalette.Base, brush)
+        palette.setBrush(QPalette.Inactive, QPalette.Base, brush)
+        brush1 = QBrush(QColor(240, 240, 240, 255))
+        brush1.setStyle(Qt.SolidPattern)
+        palette.setBrush(QPalette.Disabled, QPalette.Base, brush1)
+        self.frame_2.setPalette(palette)
+        self.frame_2.setStyleSheet(u"QFrame {\n"
+"background-image: url(:/images/back.jpeg);\n"
+"background-repeat: no-repeat;\n"
+"}")
+        self.frame_2.setFrameShape(QFrame.NoFrame)
+        self.frame_2.setFrameShadow(QFrame.Plain)
         self.issue_book = QPushButton(self.frame_2)
         self.issue_book.setObjectName(u"issue_book")
         self.issue_book.setGeometry(QRect(330, 240, 111, 31))
@@ -65,26 +79,22 @@ class Ui_MainWindow(object):
         self.search.setStyleSheet(u"\n"
 "background-color: rgb(255, 255, 255);\n"
 "color: rgb(255, 255, 255);")
-        self.comboBox = QComboBox(self.frame_2)
-        self.comboBox.setObjectName(u"comboBox")
-        self.comboBox.setGeometry(QRect(290, 340, 86, 25))
         self.label = QLabel(self.frame_2)
         self.label.setObjectName(u"label")
-        self.label.setGeometry(QRect(350, 110, 291, 61))
+        self.label.setGeometry(QRect(320, 100, 351, 61))
         self.label.setStyleSheet(u"font: 75 20pt \"Ubuntu Condensed\";\n"
 "background: transparent;\n"
 "gridline-color: rgb(255, 255, 255);\n"
 "color: rgb(255, 255, 255);")
+        self.add_book.raise_()
+        self.issue_book.raise_()
+        self.return_book.raise_()
+        self.logout_btn.raise_()
+        self.add_student.raise_()
+        self.search.raise_()
+        self.label.raise_()
 
-        self.verticalLayout.addWidget(self.frame_2)
-
-        self.frame = QFrame(self.centralwidget)
-        self.frame.setObjectName(u"frame")
-        self.frame.setMaximumSize(QSize(16777215, 50))
-        self.frame.setFrameShape(QFrame.StyledPanel)
-        self.frame.setFrameShadow(QFrame.Raised)
-
-        self.verticalLayout.addWidget(self.frame)
+        self.vboxLayout.addWidget(self.frame_2)
 
         MainWindow.setCentralWidget(self.centralwidget)
 
