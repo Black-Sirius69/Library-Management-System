@@ -6,25 +6,77 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1047</width>
-    <height>690</height>
+    <width>1024</width>
+    <height>683</height>
    </rect>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1024</width>
+    <height>683</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="maximumSize">
+    <size>
+     <width>1024</width>
+     <height>683</height>
+    </size>
+   </property>
+   <layout class="QVBoxLayout">
     <item>
      <widget class="QFrame" name="frame_2">
+      <property name="palette">
+       <palette>
+        <active>
+         <colorrole role="Base">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+        </active>
+        <inactive>
+         <colorrole role="Base">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+        </inactive>
+        <disabled>
+         <colorrole role="Base">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>240</red>
+            <green>240</green>
+            <blue>240</blue>
+           </color>
+          </brush>
+         </colorrole>
+        </disabled>
+       </palette>
+      </property>
       <property name="styleSheet">
-       <string notr="true">background: url(:/images/back.jpeg);</string>
+       <string notr="true">QFrame {
+background-image: url(:/images/back.jpeg);
+background-repeat: no-repeat;
+}</string>
       </property>
       <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
+       <enum>QFrame::NoFrame</enum>
       </property>
       <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+       <enum>QFrame::Plain</enum>
       </property>
       <widget class="QPushButton" name="issue_book">
        <property name="geometry">
@@ -129,22 +181,12 @@ color: rgb(255, 255, 255);</string>
         <string/>
        </property>
       </widget>
-      <widget class="QComboBox" name="comboBox">
-       <property name="geometry">
-        <rect>
-         <x>290</x>
-         <y>340</y>
-         <width>86</width>
-         <height>25</height>
-        </rect>
-       </property>
-      </widget>
       <widget class="QLabel" name="label">
        <property name="geometry">
         <rect>
-         <x>350</x>
-         <y>110</y>
-         <width>291</width>
+         <x>320</x>
+         <y>100</y>
+         <width>351</width>
          <height>61</height>
         </rect>
        </property>
@@ -158,22 +200,13 @@ color: rgb(255, 255, 255);</string>
         <string>Library Mangement Program</string>
        </property>
       </widget>
-     </widget>
-    </item>
-    <item>
-     <widget class="QFrame" name="frame">
-      <property name="maximumSize">
-       <size>
-        <width>16777215</width>
-        <height>50</height>
-       </size>
-      </property>
-      <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
-      </property>
+      <zorder>add_book</zorder>
+      <zorder>issue_book</zorder>
+      <zorder>return_book</zorder>
+      <zorder>logout_btn</zorder>
+      <zorder>add_student</zorder>
+      <zorder>search</zorder>
+      <zorder>label</zorder>
      </widget>
     </item>
    </layout>
