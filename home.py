@@ -88,11 +88,14 @@ class Books(QMainWindow, books.Ui_MainWindow):
             success = QMessageBox()
             success.about(self, "SUCCESSFUL", "Data Added")
             success.setIcon(QMessageBox.Icon.Information)
-            success.show()
-            self.update()
+            success.setStandardButtons(QMessageBox.StandardButton.Ok)
+            success = success.exec()
+            if success == QMessageBox.StandardButton.Ok:
+                for widget in self.findChildren(QLineEdit):
+                    widget.clear()
         except SQLAlchemyError:
             row = conn.execute(sqlalchemy.text("SELECT * FROM books WHERE Acc_no = :x"), {"x": self.acc_no.text()})
-            if len(row) >= 1:
+            if len(list(row)) >= 1:
                 error = QMessageBox()
                 error.about(self, "Error", f"A Book with accession number {self.acc_no.text()} already exists")
                 error.setIcon(QMessageBox.Icon.Critical)
