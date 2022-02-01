@@ -29,7 +29,7 @@ class Login(QMainWindow, login.Ui_MainWindow):
         else:
             error = QMessageBox()
             error.about(self, "Could not login", "Incorrect username or password.")
-            error.setIcon(QMessageBox.Icon.Information)
+            error.setIcon(QMessageBox.Information)
             error.show()
 
 
@@ -87,7 +87,7 @@ class Books(QMainWindow, books.Ui_MainWindow):
                 "i": copies})
             success = QMessageBox()
             success.about(self, "SUCCESSFUL", "Data Added")
-            success.setIcon(QMessageBox.Icon.Information)
+            success.setIcon(QMessageBox.Information)
             success.setStandardButtons(QMessageBox.StandardButton.Ok)
             success = success.exec()
             if success == QMessageBox.StandardButton.Ok:
@@ -98,13 +98,19 @@ class Books(QMainWindow, books.Ui_MainWindow):
             if len(list(row)) >= 1:
                 error = QMessageBox()
                 error.about(self, "Error", f"A Book with accession number {self.acc_no.text()} already exists")
-                error.setIcon(QMessageBox.Icon.Critical)
-                error.show()
+                error.setIcon(QMessageBox.Critical)
+                error = error.exec()
+                if error == QMessageBox.StandardButton.Ok:
+                    for widget in self.findChildren(QLineEdit):
+                        widget.clear()
             else:
                 error = QMessageBox()
                 error.about(self, "Error", "Could not add data")
-                error.setIcon(QMessageBox.Icon.Critical)
-                error.show()
+                error.setIcon(QMessageBox.Critical)
+                error = error.exec()
+                if error == QMessageBox.StandardButton.Ok:
+                    for widget in self.findChildren(QLineEdit):
+                        widget.clear()
 
 
 if __name__ == '__main__':
