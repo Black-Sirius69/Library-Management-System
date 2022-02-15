@@ -105,10 +105,10 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
-        self.issue_book.setText(QCoreApplication.translate("MainWindow", u"Issue Books", None))
-        self.return_book.setText(QCoreApplication.translate("MainWindow", u"Return Books", None))
+        self.issue_book.setText(QCoreApplication.translate("MainWindow", u"Issue AddBooks", None))
+        self.return_book.setText(QCoreApplication.translate("MainWindow", u"Return AddBooks", None))
         self.logout_btn.setText(QCoreApplication.translate("MainWindow", u"Logout", None))
-        self.add_book.setText(QCoreApplication.translate("MainWindow", u"Add Books", None))
+        self.add_book.setText(QCoreApplication.translate("MainWindow", u"Add AddBooks", None))
         self.add_student.setText(QCoreApplication.translate("MainWindow", u"Add Student", None))
         self.search.setText("")
         self.label.setText(QCoreApplication.translate("MainWindow", u"Library Mangement Program", None))

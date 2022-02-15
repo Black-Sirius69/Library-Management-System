@@ -15,40 +15,10 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="9" column="2">
-     <widget class="QLineEdit" name="call_number"/>
-    </item>
-    <item row="4" column="0">
-     <widget class="QLabel" name="label_5">
+    <item row="3" column="0">
+     <widget class="QLabel" name="label_4">
       <property name="text">
-       <string>ISBN</string>
-      </property>
-     </widget>
-    </item>
-    <item row="10" column="2">
-     <widget class="QLineEdit" name="edition"/>
-    </item>
-    <item row="9" column="0">
-     <widget class="QLabel" name="label_9">
-      <property name="text">
-       <string>Call Number</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="0">
-     <widget class="QLabel" name="label">
-      <property name="text">
-       <string>Title</string>
-      </property>
-     </widget>
-    </item>
-    <item row="4" column="2">
-     <widget class="QLineEdit" name="isbn"/>
-    </item>
-    <item row="13" column="2">
-     <widget class="QPushButton" name="add_data">
-      <property name="text">
-       <string>Add</string>
+       <string>Acc. No</string>
       </property>
      </widget>
     </item>
@@ -59,22 +29,66 @@
       </property>
      </widget>
     </item>
-    <item row="2" column="2">
-     <widget class="QLineEdit" name="author_2"/>
+    <item row="9" column="2">
+     <widget class="QLineEdit" name="call_number"/>
     </item>
-    <item row="11" column="2">
-     <widget class="QLineEdit" name="copies"/>
+    <item row="8" column="2">
+     <widget class="QLineEdit" name="class_number"/>
     </item>
-    <item row="6" column="2">
-     <widget class="QLineEdit" name="publisher"/>
+    <item row="10" column="2">
+     <widget class="QLineEdit" name="edition"/>
+    </item>
+    <item row="1" column="2">
+     <widget class="QLineEdit" name="author_1"/>
     </item>
     <item row="5" column="2">
      <widget class="QLineEdit" name="subject"/>
     </item>
-    <item row="3" column="0">
-     <widget class="QLabel" name="label_4">
+    <item row="13" column="2">
+     <widget class="QPushButton" name="add_data">
       <property name="text">
-       <string>Acc. No</string>
+       <string>Add</string>
+      </property>
+     </widget>
+    </item>
+    <item row="9" column="0">
+     <widget class="QLabel" name="label_9">
+      <property name="text">
+       <string>Call Number</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="0">
+     <widget class="QLabel" name="label_5">
+      <property name="text">
+       <string>ISBN</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="0">
+     <widget class="QLabel" name="label_7">
+      <property name="text">
+       <string>Subject</string>
+      </property>
+     </widget>
+    </item>
+    <item row="8" column="0">
+     <widget class="QLabel" name="label_12">
+      <property name="text">
+       <string>Class Number</string>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="2">
+     <widget class="QLineEdit" name="year_of_publication"/>
+    </item>
+    <item row="0" column="2">
+     <widget class="QLineEdit" name="title"/>
+    </item>
+    <item row="6" column="0">
+     <widget class="QLabel" name="label_6">
+      <property name="text">
+       <string>Publisher</string>
       </property>
      </widget>
     </item>
@@ -92,14 +106,28 @@
       </property>
      </widget>
     </item>
-    <item row="1" column="2">
-     <widget class="QLineEdit" name="author_1"/>
+    <item row="10" column="0">
+     <widget class="QLabel" name="label_10">
+      <property name="text">
+       <string>Edition</string>
+      </property>
+     </widget>
     </item>
-    <item row="7" column="2">
-     <widget class="QLineEdit" name="year_of_publication"/>
+    <item row="11" column="2">
+     <widget class="QLineEdit" name="copies"/>
+    </item>
+    <item row="0" column="0">
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>Title</string>
+      </property>
+     </widget>
     </item>
     <item row="3" column="2">
      <widget class="QLineEdit" name="acc_no"/>
+    </item>
+    <item row="2" column="2">
+     <widget class="QLineEdit" name="author_2"/>
     </item>
     <item row="1" column="0">
      <widget class="QLabel" name="label_2">
@@ -108,39 +136,18 @@
       </property>
      </widget>
     </item>
-    <item row="0" column="2">
-     <widget class="QLineEdit" name="title"/>
+    <item row="4" column="2">
+     <widget class="QLineEdit" name="isbn"/>
     </item>
-    <item row="10" column="0">
-     <widget class="QLabel" name="label_10">
+    <item row="6" column="2">
+     <widget class="QLineEdit" name="publisher"/>
+    </item>
+    <item row="13" column="0">
+     <widget class="QPushButton" name="import_data">
       <property name="text">
-       <string>Edition</string>
+       <string>Import</string>
       </property>
      </widget>
-    </item>
-    <item row="5" column="0">
-     <widget class="QLabel" name="label_7">
-      <property name="text">
-       <string>Subject</string>
-      </property>
-     </widget>
-    </item>
-    <item row="6" column="0">
-     <widget class="QLabel" name="label_6">
-      <property name="text">
-       <string>Publisher</string>
-      </property>
-     </widget>
-    </item>
-    <item row="8" column="0">
-     <widget class="QLabel" name="label_12">
-      <property name="text">
-       <string>Class Number</string>
-      </property>
-     </widget>
-    </item>
-    <item row="8" column="2">
-     <widget class="QLineEdit" name="class_number"/>
     </item>
    </layout>
   </widget>

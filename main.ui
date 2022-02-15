@@ -31,39 +31,9 @@
      <widget class="QFrame" name="frame_2">
       <property name="palette">
        <palette>
-        <active>
-         <colorrole role="Base">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </active>
-        <inactive>
-         <colorrole role="Base">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </inactive>
-        <disabled>
-         <colorrole role="Base">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>240</red>
-            <green>240</green>
-            <blue>240</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </disabled>
+        <active/>
+        <inactive/>
+        <disabled/>
        </palette>
       </property>
       <property name="styleSheet">
@@ -92,7 +62,7 @@ background-repeat: no-repeat;
 color: rgb(255, 255, 255);</string>
        </property>
        <property name="text">
-        <string>Issue Books</string>
+        <string>Issue AddBooks</string>
        </property>
       </widget>
       <widget class="QPushButton" name="return_book">
@@ -109,7 +79,7 @@ color: rgb(255, 255, 255);</string>
 background-color: rgb(0, 0, 0);</string>
        </property>
        <property name="text">
-        <string>Return Books</string>
+        <string>Return AddBooks</string>
        </property>
       </widget>
       <widget class="QPushButton" name="logout_btn">
@@ -143,7 +113,7 @@ color: rgb(255, 255, 255);</string>
 color: rgb(255, 255, 255);</string>
        </property>
        <property name="text">
-        <string>Add Books</string>
+        <string>Add AddBooks</string>
        </property>
       </widget>
       <widget class="QPushButton" name="add_student">
@@ -160,7 +130,7 @@ color: rgb(255, 255, 255);</string>
 background-color: rgb(0, 0, 0);</string>
        </property>
        <property name="text">
-        <string>Add Student</string>
+        <string>Add Students</string>
        </property>
       </widget>
       <widget class="QLineEdit" name="search">
@@ -212,8 +182,6 @@ color: rgb(255, 255, 255);</string>
    </layout>
   </widget>
  </widget>
- <resources>
-  <include location="library_management.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>
