@@ -1,3 +1,3 @@
 {
-    "files": ["home.py", "Login.ui", "main.ui", "books.py", "library_management.qrc", "books.ui", "library_management_rc.py", "main_win.py", "login.py"]
+    "files": ["home.py","library_management_rc.py","main_win.py","login.py","main.ui","books.py","library_management.qrc","Login.ui","books.ui","student.ui"]
 }
