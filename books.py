@@ -1,200 +1,149 @@
-# -*- coding: utf-8 -*-
+import os
+import sys
 
-################################################################################
-## Form generated from reading UI file 'books.ui'
-##
-## Created by: Qt User Interface Compiler version 6.2.2
-##
-## WARNING! All changes made in this file will be lost when recompiling UI file!
-################################################################################
+import MySQLdb
+import sqlalchemy
+from sqlalchemy.exc import SQLAlchemyError, IntegrityError
+from sqlalchemy.ext.automap import automap_base
+from sqlalchemy.orm import Session
+from pymarc import MARCReader
 
-from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
-    QMetaObject, QObject, QPoint, QRect,
-    QSize, QTime, QUrl, Qt)
-from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
-    QFont, QFontDatabase, QGradient, QIcon,
-    QImage, QKeySequence, QLinearGradient, QPainter,
-    QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QGridLayout, QLabel, QLineEdit,
-    QMainWindow, QPushButton, QSizePolicy, QStatusBar,
-    QWidget)
+from PySide6.QtWidgets import QLineEdit, QMainWindow, QMessageBox, QFileDialog, QApplication
+import book_ui
 
-class Ui_MainWindow(object):
-    def setupUi(self, MainWindow):
-        if not MainWindow.objectName():
-            MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(752, 541)
-        self.centralwidget = QWidget(MainWindow)
-        self.centralwidget.setObjectName(u"centralwidget")
-        self.gridLayout = QGridLayout(self.centralwidget)
-        self.gridLayout.setObjectName(u"gridLayout")
-        self.label_4 = QLabel(self.centralwidget)
-        self.label_4.setObjectName(u"label_4")
+Base = automap_base()
 
-        self.gridLayout.addWidget(self.label_4, 3, 0, 1, 1)
+#  set the sqlalchemy engine to mysql server and connect
+engine = sqlalchemy.create_engine(
+    "mysql://vedant:vedant@localhost/library_management")
 
-        self.label_3 = QLabel(self.centralwidget)
-        self.label_3.setObjectName(u"label_3")
+# Reflect tables
+Base.prepare(engine, reflect=True)
 
-        self.gridLayout.addWidget(self.label_3, 2, 0, 1, 1)
+Book = Base.classes.books
 
-        self.call_number = QLineEdit(self.centralwidget)
-        self.call_number.setObjectName(u"call_number")
+# Create a session
+session = Session(engine)
 
-        self.gridLayout.addWidget(self.call_number, 9, 2, 1, 1)
 
-        self.class_number = QLineEdit(self.centralwidget)
-        self.class_number.setObjectName(u"class_number")
+class AddBooks(QMainWindow, book_ui.Ui_MainWindow):
+    def __init__(self) -> None:
+        super().__init__()
+        self.setupUi(self)
+        self.title.setFocus()
+        self.add_data.clicked.connect(self.add)
+        self.import_data.clicked.connect(self.import_book)
+        self.setWindowTitle("Cerebrum - Add Books")
 
-        self.gridLayout.addWidget(self.class_number, 8, 2, 1, 1)
+    def add(self):
+        try:
+            title = self.title.text()
+            author_1 = self.author_1.text()
+            author_2 = self.author_2.text()
+            isbn = self.isbn.text()
+            pub = self.publisher.text()
+            subject = self.subject.text()
+            yop = self.year_of_publication.text()
+            acc = self.acc_no.text()
+            class_num = self.class_number.text()
+            call_num = self.call_number.text()
+            edition = self.edition.text()
+            copies = self.copies.text()
+            book = Book(Title=title, Author_1=author_1, Author_2=author_2, isbn=isbn, call_no=call_num,
+                        class_no=class_num, copies=copies, publisher=pub, year_of_publication=yop,
+                        edition=edition, subject=subject, Acc_no=acc)
+            session.add(book)
+            session.commit()
+            success = QMessageBox()
+            success.about(self, "SUCCESSFUL", "Data Added")
+            success.setStandardButtons(QMessageBox.StandardButton.Ok)
+            success = success.exec()
+            if success == QMessageBox.StandardButton.Ok:
+                for widget in self.findChildren(QLineEdit):
+                    widget.clear()
+        except SQLAlchemyError:
+            error = QMessageBox()
+            error.about(self, "Error", "Could not add data")
+            error = error.exec()
+            if error == QMessageBox.StandardButton.Ok:
+                for widget in self.findChildren(QLineEdit):
+                    widget.clear()
 
-        self.edition = QLineEdit(self.centralwidget)
-        self.edition.setObjectName(u"edition")
+    def import_book(self):
+        skipped = []
+        name, _ = QFileDialog.getOpenFileName(self, "Select Marc File", os.getcwd(
+        ), "Marc Files (*.mrc);; All Files (*)")
+        if name != 0 and name[-4::] == '.mrc':
+            with open(name, 'rb') as file:
+                reader = MARCReader(file)
+                added = 0
+                for record in reader:
+                    title = record.title()
+                    author_1 = record.author()
+                    author_2 = None
+                    if record['541']:
+                        acc_no = record['541']['a']
+                        if isinstance(acc_no, str):
+                            pos = acc_no.find('J')
+                            acc_no = acc_no[0:pos]
+                    elif record['952']:
+                        acc_no = record['952']['p']
+                        if type(acc_no) == str:
+                            pos = acc_no.find('J')
+                            acc_no = acc_no[0:pos]
+                    else:
+                        print("Cannot Enter Data. Accession Number not found.")
+                        raise ValueError("Cannot Enter Data without Acc No.")
 
-        self.gridLayout.addWidget(self.edition, 10, 2, 1, 1)
+                    if acc_no is None:
+                        skipped.append(record.title())
+                        continue
 
-        self.author_1 = QLineEdit(self.centralwidget)
-        self.author_1.setObjectName(u"author_1")
+                    if record['700']:
+                        author_2 = record['700']['a']
+                    publisher = record.publisher()
+                    yop = record.pubyear()
+                    if isinstance(yop, str):
+                        yop = None
+                    sub = None
+                    if record.subjects():
+                        sub = record.subjects()[0]['a']
+                    isbn = record.isbn()
+                    class_no = None
+                    call_no = None
+                    if record['082']:
+                        class_no = record['082']['a']
+                        call_no = record['082']['b']
+                    if isinstance(class_no, str):
+                        class_no = None
+                    edition = None
+                    if record['250']:
+                        edition = record['250']['a']
+                    copies = 1
+                    if record['562']:
+                        copies = record['562']['e']
+                    try:
+                        book = Book(Acc_no=acc_no, Title=title, Author_1=author_1, Author_2=author_2,
+                                    publisher=publisher, isbn=isbn, year_of_publication=yop, class_no=class_no,
+                                    call_no=call_no, subject=sub, edition=edition, copies=copies)
+                        session.add(book)
+                        session.commit()
+                        added += 1
+                    except MySQLdb.IntegrityError:
+                        skipped.append(title)
+                        session.rollback()
+                    except IntegrityError:
+                        skipped.append(title)
+                        session.rollback()
+                success = QMessageBox()
+                success.about(self, "Successful",
+                              f'Added {added} books.\n Could not add {len(skipped)} books as they were not compatible.')
 
-        self.gridLayout.addWidget(self.author_1, 1, 2, 1, 1)
 
-        self.subject = QLineEdit(self.centralwidget)
-        self.subject.setObjectName(u"subject")
+session.close()
 
-        self.gridLayout.addWidget(self.subject, 5, 2, 1, 1)
-
-        self.add_data = QPushButton(self.centralwidget)
-        self.add_data.setObjectName(u"add_data")
-
-        self.gridLayout.addWidget(self.add_data, 13, 2, 1, 1)
-
-        self.label_9 = QLabel(self.centralwidget)
-        self.label_9.setObjectName(u"label_9")
-
-        self.gridLayout.addWidget(self.label_9, 9, 0, 1, 1)
-
-        self.label_5 = QLabel(self.centralwidget)
-        self.label_5.setObjectName(u"label_5")
-
-        self.gridLayout.addWidget(self.label_5, 4, 0, 1, 1)
-
-        self.label_7 = QLabel(self.centralwidget)
-        self.label_7.setObjectName(u"label_7")
-
-        self.gridLayout.addWidget(self.label_7, 5, 0, 1, 1)
-
-        self.label_12 = QLabel(self.centralwidget)
-        self.label_12.setObjectName(u"label_12")
-
-        self.gridLayout.addWidget(self.label_12, 8, 0, 1, 1)
-
-        self.year_of_publication = QLineEdit(self.centralwidget)
-        self.year_of_publication.setObjectName(u"year_of_publication")
-
-        self.gridLayout.addWidget(self.year_of_publication, 7, 2, 1, 1)
-
-        self.title = QLineEdit(self.centralwidget)
-        self.title.setObjectName(u"title")
-
-        self.gridLayout.addWidget(self.title, 0, 2, 1, 1)
-
-        self.label_6 = QLabel(self.centralwidget)
-        self.label_6.setObjectName(u"label_6")
-
-        self.gridLayout.addWidget(self.label_6, 6, 0, 1, 1)
-
-        self.label_8 = QLabel(self.centralwidget)
-        self.label_8.setObjectName(u"label_8")
-
-        self.gridLayout.addWidget(self.label_8, 7, 0, 1, 1)
-
-        self.label_11 = QLabel(self.centralwidget)
-        self.label_11.setObjectName(u"label_11")
-
-        self.gridLayout.addWidget(self.label_11, 11, 0, 1, 1)
-
-        self.label_10 = QLabel(self.centralwidget)
-        self.label_10.setObjectName(u"label_10")
-
-        self.gridLayout.addWidget(self.label_10, 10, 0, 1, 1)
-
-        self.copies = QLineEdit(self.centralwidget)
-        self.copies.setObjectName(u"copies")
-
-        self.gridLayout.addWidget(self.copies, 11, 2, 1, 1)
-
-        self.label = QLabel(self.centralwidget)
-        self.label.setObjectName(u"label")
-
-        self.gridLayout.addWidget(self.label, 0, 0, 1, 1)
-
-        self.acc_no = QLineEdit(self.centralwidget)
-        self.acc_no.setObjectName(u"acc_no")
-
-        self.gridLayout.addWidget(self.acc_no, 3, 2, 1, 1)
-
-        self.author_2 = QLineEdit(self.centralwidget)
-        self.author_2.setObjectName(u"author_2")
-
-        self.gridLayout.addWidget(self.author_2, 2, 2, 1, 1)
-
-        self.label_2 = QLabel(self.centralwidget)
-        self.label_2.setObjectName(u"label_2")
-
-        self.gridLayout.addWidget(self.label_2, 1, 0, 1, 1)
-
-        self.isbn = QLineEdit(self.centralwidget)
-        self.isbn.setObjectName(u"isbn")
-
-        self.gridLayout.addWidget(self.isbn, 4, 2, 1, 1)
-
-        self.publisher = QLineEdit(self.centralwidget)
-        self.publisher.setObjectName(u"publisher")
-
-        self.gridLayout.addWidget(self.publisher, 6, 2, 1, 1)
-
-        self.import_data = QPushButton(self.centralwidget)
-        self.import_data.setObjectName(u"import_data")
-
-        self.gridLayout.addWidget(self.import_data, 13, 0, 1, 1)
-
-        MainWindow.setCentralWidget(self.centralwidget)
-        self.statusbar = QStatusBar(MainWindow)
-        self.statusbar.setObjectName(u"statusbar")
-        MainWindow.setStatusBar(self.statusbar)
-        QWidget.setTabOrder(self.title, self.author_1)
-        QWidget.setTabOrder(self.author_1, self.author_2)
-        QWidget.setTabOrder(self.author_2, self.acc_no)
-        QWidget.setTabOrder(self.acc_no, self.isbn)
-        QWidget.setTabOrder(self.isbn, self.subject)
-        QWidget.setTabOrder(self.subject, self.publisher)
-        QWidget.setTabOrder(self.publisher, self.year_of_publication)
-        QWidget.setTabOrder(self.year_of_publication, self.class_number)
-        QWidget.setTabOrder(self.class_number, self.call_number)
-        QWidget.setTabOrder(self.call_number, self.edition)
-        QWidget.setTabOrder(self.edition, self.copies)
-        QWidget.setTabOrder(self.copies, self.add_data)
-
-        self.retranslateUi(MainWindow)
-
-        QMetaObject.connectSlotsByName(MainWindow)
-    # setupUi
-
-    def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
-        self.label_4.setText(QCoreApplication.translate("MainWindow", u"Acc. No", None))
-        self.label_3.setText(QCoreApplication.translate("MainWindow", u"Author2", None))
-        self.add_data.setText(QCoreApplication.translate("MainWindow", u"Add", None))
-        self.label_9.setText(QCoreApplication.translate("MainWindow", u"Call Number", None))
-        self.label_5.setText(QCoreApplication.translate("MainWindow", u"ISBN", None))
-        self.label_7.setText(QCoreApplication.translate("MainWindow", u"Subject", None))
-        self.label_12.setText(QCoreApplication.translate("MainWindow", u"Class Number", None))
-        self.label_6.setText(QCoreApplication.translate("MainWindow", u"Publisher", None))
-        self.label_8.setText(QCoreApplication.translate("MainWindow", u"Year of Publication", None))
-        self.label_11.setText(QCoreApplication.translate("MainWindow", u"Copies", None))
-        self.label_10.setText(QCoreApplication.translate("MainWindow", u"Edition", None))
-        self.label.setText(QCoreApplication.translate("MainWindow", u"Title", None))
-        self.label_2.setText(QCoreApplication.translate("MainWindow", u"Author1", None))
-        self.import_data.setText(QCoreApplication.translate("MainWindow", u"Import", None))
-    # retranslateUi
-
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    win = AddBooks()
+    win.show()
+    sys.exit(app.exec())

@@ -1,4 +1,0 @@
-Student Data heads :-> ID -> Candidate/Alternate key, Name, Class, Gender, Section, Admno -> Unique Primary Key, Address, Phone
-
-Book Data Heads:-> 
-Acc No, Author1, Author2, Title, class number, publisher, Subject, ISBN, Call Number, Year of publication, edition, copies. 
