@@ -83,7 +83,7 @@ class AddBooks(QMainWindow, book_ui.Ui_MainWindow):
                     author_2 = None
                     if record['541']:
                         acc_no = record['541']['a']
-                        if type(acc_no) == str:
+                        if isinstance(acc_no, str):
                             pos = acc_no.find('J')
                             acc_no = acc_no[0:pos]
                     elif record['952']:
@@ -103,7 +103,7 @@ class AddBooks(QMainWindow, book_ui.Ui_MainWindow):
                         author_2 = record['700']['a']
                     publisher = record.publisher()
                     yop = record.pubyear()
-                    if type(yop) == str:
+                    if isinstance(yop, str):
                         yop = None
                     sub = None
                     if record.subjects():
@@ -114,7 +114,7 @@ class AddBooks(QMainWindow, book_ui.Ui_MainWindow):
                     if record['082']:
                         class_no = record['082']['a']
                         call_no = record['082']['b']
-                    if type(class_no) == str:
+                    if isinstance(class_no, str):
                         class_no = None
                     edition = None
                     if record['250']:
