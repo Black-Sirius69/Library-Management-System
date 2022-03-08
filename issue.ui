@@ -101,6 +101,13 @@
    </layout>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>stu_no</tabstop>
+  <tabstop>book_no</tabstop>
+  <tabstop>issue_date</tabstop>
+  <tabstop>ret_date</tabstop>
+  <tabstop>issue_book</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

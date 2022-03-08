@@ -5,7 +5,7 @@ from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 
-from PySide6.QtWidgets import QLineEdit, QMainWindow, QMessageBox, QFileDialog, QApplication
+from PySide6.QtWidgets import QLineEdit, QMainWindow, QMessageBox, QApplication
 import book_ui
 
 Base = automap_base()
@@ -45,9 +45,9 @@ class AddBooks(QMainWindow, book_ui.Ui_MainWindow):
             call_num = self.call_number.text()
             edition = self.edition.text()
             copies = self.copies.text()
-            book = Book(Title=title, Author_1=author_1, Author_2=author_2, isbn=isbn, call_no=call_num,
-                        class_no=class_num, copies=copies, publisher=pub, year_of_publication=yop,
-                        edition=edition, subject=subject, Acc_no=acc)
+            book = Book(Title=title, Author_1=author_1, Author_2=author_2, ISBN=isbn, Call_no=call_num,
+                        Class_no=class_num, copies=copies, publisher=pub, Year_of_publication=yop,
+                        Edition=edition, Subject=subject, Acc_no=acc)
             session.add(book)
             session.commit()
 

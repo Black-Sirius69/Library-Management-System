@@ -92,6 +92,10 @@ class Ui_MainWindow(object):
         self.gridLayout.addWidget(self.issue_book, 5, 1, 1, 1)
 
         MainWindow.setCentralWidget(self.centralwidget)
+        QWidget.setTabOrder(self.stu_no, self.book_no)
+        QWidget.setTabOrder(self.book_no, self.issue_date)
+        QWidget.setTabOrder(self.issue_date, self.ret_date)
+        QWidget.setTabOrder(self.ret_date, self.issue_book)
 
         self.retranslateUi(MainWindow)
 

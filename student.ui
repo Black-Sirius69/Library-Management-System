@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>657</width>
-    <height>408</height>
+    <height>434</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -21,6 +21,34 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QFormLayout" name="formLayout">
+    <item row="0" column="0">
+     <widget class="QPushButton" name="home_page">
+      <property name="text">
+       <string>Go Back</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0" colspan="2">
+     <widget class="QLabel" name="label_9">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>100</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Student Registration Form</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
     <item row="3" column="0">
      <widget class="QLabel" name="label">
       <property name="text">
@@ -82,64 +110,16 @@
      <widget class="QLineEdit" name="admno"/>
     </item>
     <item row="9" column="0">
-     <widget class="QLabel" name="label_7">
+     <widget class="QPushButton" name="delete_2">
       <property name="text">
-       <string>Adress</string>
+       <string>Delete  Student</string>
       </property>
      </widget>
     </item>
     <item row="9" column="1">
-     <widget class="QLineEdit" name="address"/>
-    </item>
-    <item row="10" column="0">
-     <widget class="QLabel" name="label_8">
-      <property name="text">
-       <string>Phone</string>
-      </property>
-     </widget>
-    </item>
-    <item row="10" column="1">
-     <widget class="QLineEdit" name="phone"/>
-    </item>
-    <item row="11" column="1">
      <widget class="QPushButton" name="add_data">
       <property name="text">
        <string>Add</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="0" colspan="2">
-     <widget class="QLabel" name="label_9">
-      <property name="minimumSize">
-       <size>
-        <width>0</width>
-        <height>100</height>
-       </size>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>16</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Student Registration Form</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="0">
-     <widget class="QPushButton" name="home_page">
-      <property name="text">
-       <string>Go Back</string>
-      </property>
-     </widget>
-    </item>
-    <item row="11" column="0">
-     <widget class="QPushButton" name="delete_2">
-      <property name="text">
-       <string>Delete  Student</string>
       </property>
      </widget>
     </item>
