@@ -96,7 +96,7 @@ class Issue(QMainWindow, issue_ui.Ui_MainWindow):
                     session.execute(stmt)
                     session.commit()
                     success = QMessageBox()
-                    success.setText("Data Added")
+                    success.setText("Book Issued")
                     success.setWindowTitle("Successful")
                     success.setIcon(QMessageBox.Icon.Information)
                     success.setStandardButtons(QMessageBox.StandardButton.Ok)
