@@ -25,25 +25,20 @@ class Ui_Dialog(object):
         Dialog.resize(400, 300)
         self.formLayout = QFormLayout(Dialog)
         self.formLayout.setObjectName(u"formLayout")
-        self.delete_btn = QPushButton(Dialog)
-        self.delete_btn.setObjectName(u"delete_btn")
+        self.label = QLabel(Dialog)
+        self.label.setObjectName(u"label")
 
-        self.formLayout.setWidget(4, QFormLayout.FieldRole, self.delete_btn)
+        self.formLayout.setWidget(1, QFormLayout.LabelRole, self.label)
 
         self.id = QLineEdit(Dialog)
         self.id.setObjectName(u"id")
 
-        self.formLayout.setWidget(2, QFormLayout.FieldRole, self.id)
+        self.formLayout.setWidget(1, QFormLayout.FieldRole, self.id)
 
-        self.label = QLabel(Dialog)
-        self.label.setObjectName(u"label")
+        self.delete_btn = QPushButton(Dialog)
+        self.delete_btn.setObjectName(u"delete_btn")
 
-        self.formLayout.setWidget(2, QFormLayout.LabelRole, self.label)
-
-        self.go_home = QPushButton(Dialog)
-        self.go_home.setObjectName(u"go_home")
-
-        self.formLayout.setWidget(0, QFormLayout.LabelRole, self.go_home)
+        self.formLayout.setWidget(3, QFormLayout.FieldRole, self.delete_btn)
 
 
         self.retranslateUi(Dialog)
@@ -53,8 +48,7 @@ class Ui_Dialog(object):
 
     def retranslateUi(self, Dialog):
         Dialog.setWindowTitle(QCoreApplication.translate("Dialog", u"Dialog", None))
-        self.delete_btn.setText(QCoreApplication.translate("Dialog", u"Delete", None))
         self.label.setText(QCoreApplication.translate("Dialog", u"TextLabel", None))
-        self.go_home.setText(QCoreApplication.translate("Dialog", u"Go Back", None))
+        self.delete_btn.setText(QCoreApplication.translate("Dialog", u"Delete", None))
     # retranslateUi
 
