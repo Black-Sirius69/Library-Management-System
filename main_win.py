@@ -1,6 +1,8 @@
+# imports
 import sys
 from PySide6.QtWidgets import QMainWindow, QApplication
 
+# Imports to subsequent modules
 import main_ui
 import books
 import login

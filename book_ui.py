@@ -178,10 +178,10 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.home_page, 0, 0, 1, 1)
 
-        self.delete_2 = QPushButton(self.centralwidget)
-        self.delete_2.setObjectName(u"delete_2")
+        self.delete_btn = QPushButton(self.centralwidget)
+        self.delete_btn.setObjectName(u"delete_btn")
 
-        self.gridLayout.addWidget(self.delete_2, 15, 0, 1, 1)
+        self.gridLayout.addWidget(self.delete_btn, 15, 0, 1, 1)
 
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QStatusBar(MainWindow)
@@ -222,6 +222,6 @@ class Ui_MainWindow(object):
         self.label_11.setText(QCoreApplication.translate("MainWindow", u"Copies", None))
         self.label_4.setText(QCoreApplication.translate("MainWindow", u"Acc. No", None))
         self.home_page.setText(QCoreApplication.translate("MainWindow", u"Go Back", None))
-        self.delete_2.setText(QCoreApplication.translate("MainWindow", u"Delete Book", None))
+        self.delete_btn.setText(QCoreApplication.translate("MainWindow", u"Delete Book", None))
     # retranslateUi
 

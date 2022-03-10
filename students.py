@@ -1,12 +1,14 @@
 import sys
 
 import sqlalchemy
-from PySide6.QtWidgets import QMainWindow, QApplication, QMessageBox, QLineEdit, QFileDialog
+from PySide6.QtWidgets import QMainWindow, QApplication, QMessageBox, QLineEdit
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 
 import students_ui
+import delete
+
 
 Base = automap_base()
 
@@ -26,9 +28,10 @@ class Student(QMainWindow, students_ui.Ui_MainWindow):
     def __init__(self):
         super(Student, self).__init__()
         self.setupUi(self)
+        self.delete_ui = delete.Delete()
         self.add_data.clicked.connect(self.add)
         self.setWindowTitle("Cerebrum - Add Students")
-        # self.import_data.clicked.connect(self.import_student)
+        self.delete_btn.clicked.connect(lambda : self.delete_ui.show_ui("Admission", self.delete_func))
 
     def add(self):
         try:
@@ -70,8 +73,32 @@ class Student(QMainWindow, students_ui.Ui_MainWindow):
                 for widget in self.findChildren(QLineEdit):
                     widget.clear()
             session.rollback()
+    
+    def delete_func(self):
+        id = int(self.delete_ui.id.text()) if self.delete_ui.id.text() != '' else None
 
-session.close()
+        # Check if student is present
+        stmt = sqlalchemy.select(Students).filter_by(Admno=id)
+        result = session.execute(stmt).scalars().all()
+        if result:
+            stmt = sqlalchemy.delete(Students).filter_by(Admno=id)
+            session.execute(stmt)
+            session.commit()
+            success = QMessageBox()
+            success.setText("Student Record deleted")
+            success.setWindowTitle("Successful")
+            success.setIcon(QMessageBox.Icon.Information)
+            success.setStandardButtons(QMessageBox.StandardButton.Ok)
+            success = success.exec()
+            self.delete_ui.id.clear()
+        else :
+            error = QMessageBox()
+            error.setText("Student not found")
+            error.setWindowTitle("Error")
+            error.setIcon(QMessageBox.Icon.Critical)
+            error = error.exec()
+            if error == QMessageBox.StandardButton.Ok:
+                self.delete_ui.id.clear()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

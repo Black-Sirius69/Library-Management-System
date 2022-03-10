@@ -1,35 +1,23 @@
 import sys
 
-import sqlalchemy
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
-from sqlalchemy.ext.automap import automap_base
-from sqlalchemy.orm import Session
+import sqlalchemy
+from backend import session, Book
 
 from PySide6.QtWidgets import QLineEdit, QMainWindow, QMessageBox, QApplication
 import book_ui
-
-Base = automap_base()
-
-#  set the sqlalchemy engine to mysql server and connect
-engine = sqlalchemy.create_engine(
-    "mysql://vedant:vedant@localhost/library_management")
-
-# Reflect tables
-Base.prepare(engine, reflect=True)
-
-Book = Base.classes.books
-
-# Create a session
-session = Session(engine)
+import delete
 
 
 class AddBooks(QMainWindow, book_ui.Ui_MainWindow):
     def __init__(self) -> None:
         super().__init__()
         self.setupUi(self)
+        self.delete_ui = delete.Delete()
         self.title.setFocus()
         self.add_data.clicked.connect(self.add)
         self.setWindowTitle("Cerebrum - Add Books")
+        self.delete_btn.clicked.connect(lambda : self.delete_ui.show_ui("Admission", self.delete_func))
 
     def add(self):
         try:
@@ -81,7 +69,33 @@ class AddBooks(QMainWindow, book_ui.Ui_MainWindow):
                 for widget in self.findChildren(QLineEdit):
                     widget.clear()
 
-session.close()
+    def delete_func(self):
+        id = int(self.delete_ui.id.text()) if self.delete_ui.id.text() != '' else None
+
+        # Check if student is present
+        stmt = sqlalchemy.select(Book).filter_by(Acc_no=id)
+        result = session.execute(stmt).scalars().all()
+        if result:
+            stmt = sqlalchemy.delete(Book).filter_by(Acc_no=id)
+            session.execute(stmt)
+            session.commit()
+            success = QMessageBox()
+            success.setText("Book Record deleted")
+            success.setWindowTitle("Successful")
+            success.setIcon(QMessageBox.Icon.Information)
+            success.setStandardButtons(QMessageBox.StandardButton.Ok)
+            success = success.exec()
+            self.delete_ui.id.clear()
+        else :
+            error = QMessageBox()
+            error.setText("Book not found")
+            error.setWindowTitle("Error")
+            error.setIcon(QMessageBox.Icon.Critical)
+            error = error.exec()
+            if error == QMessageBox.StandardButton.Ok:
+                self.delete_ui.id.clear()
+
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

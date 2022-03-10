@@ -2,30 +2,12 @@ import sys
 import dateutil.parser as dparser
 from PySide6.QtCore import QDate
 from PySide6.QtWidgets import QApplication, QLineEdit, QMainWindow, QMessageBox
-from sqlalchemy import (Column, Date, ForeignKey, Table,
-                        create_engine, insert, select)
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.ext.automap import automap_base
-from sqlalchemy.orm import Session
+from sqlalchemy import select, insert
+from backend import t_issues, session, Students, Book
 
 import issue_ui
 
-Base = automap_base()
-engine = create_engine("mysql://vedant:vedant@localhost/library_management")
-t_issues = Table(
-    'issues', Base.metadata,
-    Column('book_no', ForeignKey('books.Acc_no', ondelete='CASCADE', onupdate='CASCADE'), index=True, comment='The Accession number of the book issued'),
-    Column('student_id', ForeignKey('students.Admno', ondelete='CASCADE', onupdate='CASCADE'), index=True, comment='The Admission Number of the student who is issuing the book'),
-    Column('issue_date', Date, comment='The date of issuing the book'),
-    Column('return_date', Date, comment='The date of returning the book'),
-    comment='A table for storing info of issued books'
-)
-Base.prepare(engine, reflect=True)
-Book = Base.classes.books
-Student = Base.classes.students
-
-
-session = Session(engine)
 
 
 class Issue(QMainWindow, issue_ui.Ui_MainWindow):
@@ -41,7 +23,7 @@ class Issue(QMainWindow, issue_ui.Ui_MainWindow):
         book_id = self.book_no.text()
 
         # Validate Student
-        statement = select(Student).filter_by(Admno=student_id)
+        statement = select(Students).filter_by(Admno=student_id)
         result = session.execute(statement).scalars().all()
         if not result:
             error = QMessageBox()

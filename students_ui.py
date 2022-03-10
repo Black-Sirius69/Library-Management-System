@@ -107,10 +107,10 @@ class Ui_MainWindow(object):
 
         self.formLayout.setWidget(8, QFormLayout.FieldRole, self.admno)
 
-        self.delete_2 = QPushButton(self.centralwidget)
-        self.delete_2.setObjectName(u"delete_2")
+        self.delete_btn = QPushButton(self.centralwidget)
+        self.delete_btn.setObjectName(u"delete_btn")
 
-        self.formLayout.setWidget(9, QFormLayout.LabelRole, self.delete_2)
+        self.formLayout.setWidget(9, QFormLayout.LabelRole, self.delete_btn)
 
         self.add_data = QPushButton(self.centralwidget)
         self.add_data.setObjectName(u"add_data")
@@ -134,7 +134,7 @@ class Ui_MainWindow(object):
         self.label_4.setText(QCoreApplication.translate("MainWindow", u"Age", None))
         self.label_5.setText(QCoreApplication.translate("MainWindow", u"Gender", None))
         self.label_6.setText(QCoreApplication.translate("MainWindow", u"Admission no.", None))
-        self.delete_2.setText(QCoreApplication.translate("MainWindow", u"Delete  Student", None))
+        self.delete_btn.setText(QCoreApplication.translate("MainWindow", u"Delete  Student", None))
         self.add_data.setText(QCoreApplication.translate("MainWindow", u"Add", None))
     # retranslateUi
 

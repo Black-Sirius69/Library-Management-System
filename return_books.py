@@ -1,32 +1,9 @@
 import sys
 from PySide6.QtWidgets import QDialog, QMessageBox, QApplication, QLineEdit
-from sqlalchemy import create_engine, ForeignKey, Column, Table, Date
-from sqlalchemy.ext.automap import automap_base
-from sqlalchemy.orm import Session
 from sqlalchemy.sql.expression import delete, select
+from backend import t_issues, session
 import return_ui
 
-Base = automap_base()
-metadata = Base.metadata
-
-engine = create_engine(
-    'mysql://vedant:vedant@localhost/library_management'
-)
-
-t_issues = Table(
-    'issues', metadata,
-    Column('book_no', ForeignKey('books.Acc_no', ondelete='CASCADE', onupdate='CASCADE'), index=True, comment='The Accession number of the book issued'),
-    Column('student_id', ForeignKey('students.Admno', ondelete='CASCADE', onupdate='CASCADE'), index=True, comment='The Admission Number of the student who is issuing the book'),
-    Column('issue_date', Date, comment='The date of issuing the book'),
-    Column('return_date', Date, comment='The date of returning the book'),
-    comment='A table for storing info of issued books'
-)
-
-Base.prepare(engine, reflect = True)
-Book = Base.classes.books
-Student = Base.classes.students
-
-session = Session(engine)
 
 class Return(QDialog, return_ui.Ui_Dialog):
     def __init__(self):
@@ -46,6 +23,7 @@ class Return(QDialog, return_ui.Ui_Dialog):
         if result:
             statement = delete(t_issues).filter_by(book_no=book_id)
             session.execute(statement)
+            session.commit()
             success = QMessageBox()
             success.setText("Book Returned")
             success.setWindowTitle("Successful")
