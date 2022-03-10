@@ -52,7 +52,7 @@ class Issue(QMainWindow, issue_ui.Ui_MainWindow):
             else:
                 # Validate If Issued
                 statement = select(t_issues).filter_by(book_no=book_id)
-                result = session.execute(statement)
+                result = session.execute(statement).scalars().all()
                 if result:
                     error = QMessageBox()
                     error.setStandardButtons(QMessageBox.StandardButton.Ok)
@@ -69,7 +69,6 @@ class Issue(QMainWindow, issue_ui.Ui_MainWindow):
                     return_date = dparser.parse(
                         self.issue_date.text(), fuzzy=True, ignoretz=True).date()
                     self.submit(book_id, student_id, iss_date, return_date)
-
 
     def submit(self, book_id, student_id, iss_date, return_date):
                 try:
