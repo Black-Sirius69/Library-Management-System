@@ -1,39 +1,23 @@
-import os
 import sys
 
-import MySQLdb
-import sqlalchemy
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
-from sqlalchemy.ext.automap import automap_base
-from sqlalchemy.orm import Session
-from pymarc import MARCReader
+import sqlalchemy
+from backend import session, Book
 
-from PySide6.QtWidgets import QLineEdit, QMainWindow, QMessageBox, QFileDialog, QApplication
+from PySide6.QtWidgets import QLineEdit, QMainWindow, QMessageBox, QApplication
 import book_ui
-
-Base = automap_base()
-
-#  set the sqlalchemy engine to mysql server and connect
-engine = sqlalchemy.create_engine(
-    "mysql://vedant:vedant@localhost/library_management")
-
-# Reflect tables
-Base.prepare(engine, reflect=True)
-
-Book = Base.classes.books
-
-# Create a session
-session = Session(engine)
+import delete
 
 
 class AddBooks(QMainWindow, book_ui.Ui_MainWindow):
     def __init__(self) -> None:
         super().__init__()
         self.setupUi(self)
+        self.delete_ui = delete.Delete()
         self.title.setFocus()
         self.add_data.clicked.connect(self.add)
-        self.import_data.clicked.connect(self.import_book)
         self.setWindowTitle("Cerebrum - Add Books")
+        self.delete_btn.clicked.connect(lambda : self.delete_ui.show_ui("Admission", self.delete_func))
 
     def add(self):
         try:
@@ -49,98 +33,69 @@ class AddBooks(QMainWindow, book_ui.Ui_MainWindow):
             call_num = self.call_number.text()
             edition = self.edition.text()
             copies = self.copies.text()
-            book = Book(Title=title, Author_1=author_1, Author_2=author_2, isbn=isbn, call_no=call_num,
-                        class_no=class_num, copies=copies, publisher=pub, year_of_publication=yop,
-                        edition=edition, subject=subject, Acc_no=acc)
+            book = Book(Title=title, Author_1=author_1, Author_2=author_2, ISBN=isbn, Call_no=call_num,
+                        Class_no=class_num, copies=copies, publisher=pub, Year_of_publication=yop,
+                        Edition=edition, Subject=subject, Acc_no=acc)
             session.add(book)
             session.commit()
+
             success = QMessageBox()
-            success.about(self, "SUCCESSFUL", "Data Added")
+            success.setText("Data Added")
+            success.setWindowTitle("Successful")
+            success.setIcon(QMessageBox.Icon.Information)
             success.setStandardButtons(QMessageBox.StandardButton.Ok)
             success = success.exec()
             if success == QMessageBox.StandardButton.Ok:
                 for widget in self.findChildren(QLineEdit):
                     widget.clear()
+        except IntegrityError:
+            error = QMessageBox()
+            error.setText(f"Could Not add data duplicate accession number {self.acc_no.text()}.")
+            error.setWindowTitle("Error")
+            error.setIcon(QMessageBox.Icon.Critical)
+            error.setStandardButtons(QMessageBox.StandardButton.Ok)
+            error = error.exec()
+            if error == QMessageBox.StandardButton.Ok:
+                for widget in self.findChildren(QLineEdit):
+                    widget.clear()
         except SQLAlchemyError:
             error = QMessageBox()
-            error.about(self, "Error", "Could not add data")
+            error.setText("Could not add data")
+            error.setWindowTitle("Error")
+            error.setIcon(QMessageBox.Icon.Critical)
+            error.setStandardButtons(QMessageBox.StandardButton.Ok)
             error = error.exec()
             if error == QMessageBox.StandardButton.Ok:
                 for widget in self.findChildren(QLineEdit):
                     widget.clear()
 
-    def import_book(self):
-        skipped = []
-        name, _ = QFileDialog.getOpenFileName(self, "Select Marc File", os.getcwd(
-        ), "Marc Files (*.mrc);; All Files (*)")
-        if name != 0 and name[-4::] == '.mrc':
-            with open(name, 'rb') as file:
-                reader = MARCReader(file)
-                added = 0
-                for record in reader:
-                    title = record.title()
-                    author_1 = record.author()
-                    author_2 = None
-                    if record['541']:
-                        acc_no = record['541']['a']
-                        if isinstance(acc_no, str):
-                            pos = acc_no.find('J')
-                            acc_no = acc_no[0:pos]
-                    elif record['952']:
-                        acc_no = record['952']['p']
-                        if type(acc_no) == str:
-                            pos = acc_no.find('J')
-                            acc_no = acc_no[0:pos]
-                    else:
-                        print("Cannot Enter Data. Accession Number not found.")
-                        raise ValueError("Cannot Enter Data without Acc No.")
+    def delete_func(self):
+        id = int(self.delete_ui.id.text()) if self.delete_ui.id.text() != '' else None
 
-                    if acc_no is None:
-                        skipped.append(record.title())
-                        continue
-
-                    if record['700']:
-                        author_2 = record['700']['a']
-                    publisher = record.publisher()
-                    yop = record.pubyear()
-                    if isinstance(yop, str):
-                        yop = None
-                    sub = None
-                    if record.subjects():
-                        sub = record.subjects()[0]['a']
-                    isbn = record.isbn()
-                    class_no = None
-                    call_no = None
-                    if record['082']:
-                        class_no = record['082']['a']
-                        call_no = record['082']['b']
-                    if isinstance(class_no, str):
-                        class_no = None
-                    edition = None
-                    if record['250']:
-                        edition = record['250']['a']
-                    copies = 1
-                    if record['562']:
-                        copies = record['562']['e']
-                    try:
-                        book = Book(Acc_no=acc_no, Title=title, Author_1=author_1, Author_2=author_2,
-                                    publisher=publisher, isbn=isbn, year_of_publication=yop, class_no=class_no,
-                                    call_no=call_no, subject=sub, edition=edition, copies=copies)
-                        session.add(book)
-                        session.commit()
-                        added += 1
-                    except MySQLdb.IntegrityError:
-                        skipped.append(title)
-                        session.rollback()
-                    except IntegrityError:
-                        skipped.append(title)
-                        session.rollback()
-                success = QMessageBox()
-                success.about(self, "Successful",
-                              f'Added {added} books.\n Could not add {len(skipped)} books as they were not compatible.')
+        # Check if student is present
+        stmt = sqlalchemy.select(Book).filter_by(Acc_no=id)
+        result = session.execute(stmt).scalars().all()
+        if result:
+            stmt = sqlalchemy.delete(Book).filter_by(Acc_no=id)
+            session.execute(stmt)
+            session.commit()
+            success = QMessageBox()
+            success.setText("Book Record deleted")
+            success.setWindowTitle("Successful")
+            success.setIcon(QMessageBox.Icon.Information)
+            success.setStandardButtons(QMessageBox.StandardButton.Ok)
+            success = success.exec()
+            self.delete_ui.id.clear()
+        else :
+            error = QMessageBox()
+            error.setText("Book not found")
+            error.setWindowTitle("Error")
+            error.setIcon(QMessageBox.Icon.Critical)
+            error = error.exec()
+            if error == QMessageBox.StandardButton.Ok:
+                self.delete_ui.id.clear()
 
 
-session.close()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
